@@ -17,7 +17,7 @@
         public static string Poopy(this int num)
         {
             var nums = Enumerable.Range(1, num).ToList();
-            return Poopify(nums.Select(i => string.Join(" ", nums.Take(nums.Count() - i + 1)));
+            return Poopify(nums.Select(i => string.Join(" ", nums.Take(nums.Count() - i + 1))));
         }
 
         public static string Poopy(this string str)
