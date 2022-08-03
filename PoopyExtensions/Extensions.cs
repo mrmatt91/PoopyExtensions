@@ -26,6 +26,107 @@
             return Poopify(str.Select(s => string.Join(" ", str.Take(str.Count() - x++))));
         }
 
+        public static int PoopyKaprekar(this int num, int depth)
+        {
+            if (num == 6174)
+            {
+                var finalDepth = depth;
+                depth = 0;
+                return finalDepth;
+            }
+            else
+            {
+                List<int> numbers = num.ToString().Select(i => (int)i - 48).ToList();
+                while (numbers.Count() < 4)
+                {
+                    numbers.Add(0);
+                }
+                var numSortedDesc = int.Parse(string.Join("", numbers.OrderByDescending(_ => _).Select(i => i.ToString())));
+                var numSortedAsc = int.Parse(string.Join("", numbers.OrderBy(_ => _).Select(i => i.ToString())));
+                var min = (numSortedDesc > numSortedAsc) ? numSortedAsc : numSortedDesc;
+                var max = (numSortedDesc > numSortedAsc) ? numSortedDesc : numSortedAsc;
+                var result = max - min;
+
+                return PoopyKaprekar(result, depth += 1);
+            }
+        }
+
+        public static int[] PoopyIndexOfCapitals(this string str)
+        {
+            return str.Where(c => char.IsUpper(c)).Select(c => str.IndexOf(c)).ToArray();
+        }
+
+        public static string PoopyReverseCase(this string str)
+        {
+            return string.Join("", str.Select(c => char.IsLower(c) ? char.ToUpper(c) : char.ToLower(c)));
+        }
+
+        public static double[] PoopyCountPosSumNeg(this double[] arr)
+        {
+            return new double[] { arr.Where(i => i >= 0).Count(), arr.Where(i => i < 0).Count() };
+        }
+
+        public static string[] PoopyConvertArrayToStrings(this object[] arr)
+        {
+            return arr.Select(x => x.ToString()).ToArray();
+        }
+
+        public static double[] PoopyFindLargestInEachArray(this double[][] arr)
+        {
+            return arr.Select(x => x.Max()).ToArray();
+        }
+
+        public static bool PoopyFractionGreaterThanOne(this string str)
+        {
+            var nums = str.Split("/").Select(i => int.Parse(i)).ToArray();
+            return (float)nums[0] / nums[1] > 1;
+        }
+
+        public static string PoopyBomb(this string str)
+        {
+            return str.ToLower().Contains("bomb") ? "Duck!!!" : "There is no bomb, relax.";
+        }
+
+        public static int[] PoopyMultiplyByLength(this int[] arr)
+        {
+            return arr.ToList().Select(i => i * arr.Length).ToArray();
+        }
+
+        public static int PoopyCountVowels(this string str)
+        {
+            var vowelArray = new char[] { 'a', 'e', 'i', 'o', 'u' };
+            var count = 0;
+            str.ToList().ForEach(c => {
+                if (vowelArray.Contains(c))
+                {
+                    count++;
+                }
+            });
+            return count;
+        }
+
+        public static bool PoopyPalindromeDescendents(this int num)
+        {
+            var numString = string.Concat(num.ToString().Select(c => c));
+
+            if (numString.SequenceEqual(numString.Reverse()))
+            {
+                return true;
+            }
+            else
+            {
+                if (numString.Length == 2)
+                {
+                    return false;
+                }
+                else
+                {
+                    var newNum = int.Parse(string.Concat(Enumerable.Zip(numString, numString.Skip(1), (a, b) => (a - 48) + (b - 48)).Where((v, i) => i % 2 == 0)));
+                    return PoopyPalindromeDescendents(newNum);
+                }
+            }
+        }
+
         private static string Poopify<T>(IEnumerable<T> collection)
         {
             return string.Join(Environment.NewLine, collection);
