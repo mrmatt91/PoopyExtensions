@@ -47,7 +47,7 @@
                 var max = (numSortedDesc > numSortedAsc) ? numSortedDesc : numSortedAsc;
                 var result = max - min;
 
-                return PoopyKaprekar(result, depth++);
+                return PoopyKaprekar(result, depth += 1);
             }
         }
 
