@@ -129,25 +129,41 @@ namespace PoopyExtensions
                 }
             }
         }
+
         /// <summary>
         /// Deletes all files of a specified type within a given file path. Returns a list of the files deleted.
         /// </summary>
-        /// <param name="directoryPath"></param>
-        /// <param name="fileType"></param>
+        /// <param name="directoryPath">Root of the file search.</param>
+        /// <param name="fileType">The file type to search for.</param>
+        /// <param name="topOnly">Optional; Dictates wether only top directories or all directories are searched.</param>
         /// <returns></returns>
-        public static IEnumerable<string> PoopyKill(this string directoryPath, string fileType)
+        public static IEnumerable<string> PoopyKill(this string directoryPath, string fileType, bool topOnly = false)
         {
-            string[] paths = Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories);
+            string[] paths = Directory.GetFiles(directoryPath, "*", topOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
             var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
             var validFileList = pathList.Where(result => result == fileType);
             validFileList.ToList().ForEach(result => File.Delete(result));
             return validFileList;
         }
 
+        /// <summary>
+        /// Deletes all files of the specified type(s) within a given file path. Returns a list of the files deleted.
+        /// </summary>
+        /// <param name="directoryPath">Root of the file search.</param>
+        /// <param name="fileTypes">The file type to search for.</param>
+        /// <param name="topOnly">Optional; Dictates wether only top directories or all directories are searched.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> PoopyKill(this string directoryPath, IEnumerable<string> fileTypes, bool topOnly = false)
+        {
+            string[] paths = Directory.GetFiles(directoryPath, "*", topOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
+            var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
+            var validFileList = pathList.Where(result => fileTypes.Contains(result));
+            validFileList.ToList().ForEach(result => File.Delete(result));
+            return validFileList;
+        }
+
         private static string Poopify<T>(IEnumerable<T> collection)
         {
-            var directoryPath = "C:/path/to/files";
-            directoryPath.PoopyKill(".png");
             return string.Join(Environment.NewLine, collection);
         }
     }
