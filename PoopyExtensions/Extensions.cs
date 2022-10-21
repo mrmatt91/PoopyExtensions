@@ -140,10 +140,9 @@ namespace PoopyExtensions
         public static IEnumerable<string> PoopyKill(this string directoryPath, string fileType, bool topOnly = false)
         {
             string[] paths = Directory.GetFiles(directoryPath, "*", topOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
-            var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
-            var validFileList = pathList.Where(result => result == fileType);
-            validFileList.ToList().ForEach(result => File.Delete(result));
-            return validFileList;
+            var pathList = paths.Where(path => path.Substring(path.LastIndexOf(".") + 1) == fileType);
+            pathList.ToList().ForEach(result => File.Delete(result));
+            return pathList;
         }
 
         /// <summary>
@@ -156,10 +155,9 @@ namespace PoopyExtensions
         public static IEnumerable<string> PoopyKill(this string directoryPath, IEnumerable<string> fileTypes, bool topOnly = false)
         {
             string[] paths = Directory.GetFiles(directoryPath, "*", topOnly ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
-            var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
-            var validFileList = pathList.Where(result => fileTypes.Contains(result));
-            validFileList.ToList().ForEach(result => File.Delete(result));
-            return validFileList;
+            var pathList = paths.Where(path => fileTypes.Contains(path.Substring(path.LastIndexOf(".") + 1)));
+            pathList.ToList().ForEach(result => File.Delete(result));
+            return pathList;
         }
 
 
@@ -175,9 +173,8 @@ namespace PoopyExtensions
             foreach(var kvp in fileTypesTopOrAll)
             {
                 string[] paths = Directory.GetFiles(directoryPath, "*", kvp.Value ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
-                var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
-                var validFileList = pathList.Where(result => result == kvp.Key);
-                var filesToDelete = validFileList.ToList();
+                var pathList = paths.Where(path => path.Substring(path.LastIndexOf(".") + 1) == kvp.Key);
+                var filesToDelete = pathList.ToList();
                 
                 filesToDelete.ForEach(result => File.Delete(result));
                 deletedFiles.AddRange(filesToDelete);
