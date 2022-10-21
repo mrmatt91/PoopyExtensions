@@ -1,22 +1,9 @@
-﻿using Microsoft.VisualBasic.FileIO;
-using SearchOption = System.IO.SearchOption;
+﻿
 
 namespace PoopyExtensions
 {
     public static class Extensions
     {
-        public static string Poopy<T>(this IEnumerable<T> items)
-        {
-            var x = 0;
-            var poopyString = items switch
-            {
-                IEnumerable<int> => Poopify(items.Cast<int>().ToList().Select(i => string.Join(" ", items.Take(items.Count() - i + 1)))),
-                IEnumerable<string> => Poopify(items.Select(w => string.Join(" ", items.Take(items.Count() - x++)))),
-                _ => throw new NotImplementedException()
-            };
-            return poopyString;
-        }
-
         public static string Poopy(this int num)
         {
             var nums = Enumerable.Range(1, num).ToList();
