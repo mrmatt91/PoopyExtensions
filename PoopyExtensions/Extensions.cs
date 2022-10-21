@@ -1,4 +1,7 @@
-﻿namespace PoopyExtensions
+﻿using Microsoft.VisualBasic.FileIO;
+using SearchOption = System.IO.SearchOption;
+
+namespace PoopyExtensions
 {
     public static class Extensions
     {
@@ -126,9 +129,25 @@
                 }
             }
         }
+        /// <summary>
+        /// Deletes all files of a specified type within a given file path. Returns a list of the files deleted.
+        /// </summary>
+        /// <param name="directoryPath"></param>
+        /// <param name="fileType"></param>
+        /// <returns></returns>
+        public static IEnumerable<string> PoopyKill(this string directoryPath, string fileType)
+        {
+            string[] paths = Directory.GetFiles(directoryPath, "*", SearchOption.AllDirectories);
+            var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
+            var validFileList = pathList.Where(result => result == fileType);
+            validFileList.ToList().ForEach(result => File.Delete(result));
+            return validFileList;
+        }
 
         private static string Poopify<T>(IEnumerable<T> collection)
         {
+            var directoryPath = "C:/path/to/files";
+            directoryPath.PoopyKill(".png");
             return string.Join(Environment.NewLine, collection);
         }
     }
