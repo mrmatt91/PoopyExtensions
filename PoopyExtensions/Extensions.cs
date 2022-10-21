@@ -162,6 +162,30 @@ namespace PoopyExtensions
             return validFileList;
         }
 
+
+        /// <summary>
+        /// Deletes all files of the specified type(s) within a given file path with a specified Top or All parameter.
+        /// </summary>
+        /// <param name="directoryPath">Root of the file search.</param>
+        /// <param name="fileTypesTopOrAll">File types with a search option parameter.</param>
+        /// <returns></returns>
+        public static IEnumerable<string> PoopyKill(this string directoryPath, Dictionary<string, bool> fileTypesTopOrAll)
+        {
+            var deletedFiles = new List<string>();
+            foreach(var kvp in fileTypesTopOrAll)
+            {
+                string[] paths = Directory.GetFiles(directoryPath, "*", kvp.Value ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories);
+                var pathList = paths.Select(path => path.Substring(path.LastIndexOf(".") + 1));
+                var validFileList = pathList.Where(result => result == kvp.Key);
+                var filesToDelete = validFileList.ToList();
+                
+                filesToDelete.ForEach(result => File.Delete(result));
+                deletedFiles.AddRange(filesToDelete);
+            }
+            
+            return deletedFiles;
+        }
+
         private static string Poopify<T>(IEnumerable<T> collection)
         {
             return string.Join(Environment.NewLine, collection);
